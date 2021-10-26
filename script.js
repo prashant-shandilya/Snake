@@ -1,7 +1,8 @@
-window.addEventListener('DOMcontentLoaded',()=>{
+
 
     const squares = document.querySelectorAll('.box');
     let Score = document.querySelector('.score');
+    startBtn = document.querySelector('.btn');
     let snake = [2,1,0];    // the first index is the head 1 is for the body and 0 is for the tail.
     // let currentIndex = 0;
     let speed = 0.9;
@@ -11,24 +12,22 @@ window.addEventListener('DOMcontentLoaded',()=>{
     let interval = 0;
     let appleIndex = 0;
 
-    const width = 10;
+    let width = 10;
 // function for set and reset
 
     function start(){
-        snake.forEach((item)=>{
-            squares[item].classList.remove('snake');
-        });
+        snake.forEach(index => squares[index].classList.remove('snake'));
         squares[appleIndex].classList.remove('apple');
         clearInterval(interval);
-        Score.innerHTML = score;
-        snake = [2,1,0];
-        snake.forEach((item)=>{
-            squares[item].classList.add('snake');
-        });
         score = 0;
-        intervalTime = 1000;
         randomApple();
-        setInterval(moveCount,intervalTime);
+        direction = 1;
+        scoreDisplay.innerText = score;
+        intervalTime = 1000;
+        snake = [2,1,0];
+        currentIndex = 0;
+        snake.forEach(index => squares[index].classList.add('snake'));
+        interval = setInterval(moveCount, intervalTime);
     }
     function control(e){
         if(e.keyCode === 39) {
@@ -40,6 +39,12 @@ window.addEventListener('DOMcontentLoaded',()=>{
           } else if (e.keyCode === 40) {
             direction = +width //if we press down, the snake head will instantly appear in the div ten divs from where you are now
           }
+    }
+    function randomApple(){
+        do{
+            appleIndex = Math.floor(Math.random() * squares.length)
+          } while(squares[appleIndex].classList.contains('snake')) //making sure apples dont appear on the snake
+          squares[appleIndex].classList.add('apple')
     }
     function moveCount(){
         // for collisions into the walls and into the snake body itself
@@ -75,7 +80,8 @@ window.addEventListener('DOMcontentLoaded',()=>{
 
     }
 
-    document.addEventListener('keyup',control);
-    document.querySelector('.btn').addEventListener('click',start);
-
-});
+   
+  document.addEventListener('keyup', control)
+  startBtn.addEventListener('click', start)
+    start();
+    randomApple();
